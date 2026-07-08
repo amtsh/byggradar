@@ -1,5 +1,6 @@
 "use client";
 
+import { ListFilter, Radar, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import LeadFeed from "./LeadFeed";
 import SignupForm from "./SignupForm";
@@ -44,25 +45,7 @@ function Reveal({
   );
 }
 
-const STEP_ICONS = [
-  // radar
-  <svg key="radar" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="h-5 w-5">
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="12" r="4.5" strokeOpacity="0.5" />
-    <path d="M12 12 L12 3" stroke="var(--signal)" strokeWidth="2" />
-    <circle cx="15.5" cy="14.5" r="1.2" fill="var(--signal)" stroke="none" />
-  </svg>,
-  // filter / qualify
-  <svg key="filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-    <path d="M4 5h16l-6.5 8v5.5L10.5 20v-7L4 5Z" />
-    <path d="M15 8.5l1.5 1.5L20 6.5" stroke="var(--signal)" strokeWidth="2" />
-  </svg>,
-  // send
-  <svg key="send" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-    <path d="M21 3 10.5 13.5" stroke="var(--signal)" strokeWidth="2" />
-    <path d="M21 3 14 21l-3.5-7.5L3 10l18-7Z" />
-  </svg>,
-];
+const STEP_ICONS = [Radar, ListFilter, Send] as const;
 
 function Page() {
   const { t } = useLanguage();
@@ -159,12 +142,14 @@ function Page() {
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">{t.how.sub}</p>
           </Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-3">
-            {t.how.steps.map((step, i) => (
+            {t.how.steps.map((step, i) => {
+              const Icon = STEP_ICONS[i];
+              return (
               <Reveal key={step.name} delay={i * 100}>
                 <div className="group flex h-full flex-col rounded-2xl border border-line bg-paper p-6 transition-all duration-300 hover:-translate-y-1 hover:card-shadow">
                   <div className="flex items-center justify-between">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-white">
-                      {STEP_ICONS[i]}
+                      <Icon className="h-5 w-5" strokeWidth={1.5} />
                     </span>
                     <span className="font-mono text-xs text-muted">0{i + 1}</span>
                   </div>
@@ -172,7 +157,8 @@ function Page() {
                   <p className="mt-2 text-[14px] leading-relaxed text-muted">{step.body}</p>
                 </div>
               </Reveal>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>

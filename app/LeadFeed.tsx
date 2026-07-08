@@ -1,5 +1,6 @@
 "use client";
 
+import { Radar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 
@@ -23,11 +24,7 @@ export default function LeadFeed() {
             {t.feed.header}
           </span>
         </div>
-        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden className="opacity-60">
-          <circle cx="11" cy="11" r="10" fill="none" stroke="white" strokeOpacity="0.3" />
-          <circle cx="11" cy="11" r="6" fill="none" stroke="white" strokeOpacity="0.2" />
-          <line x1="11" y1="11" x2="11" y2="1" stroke="#e0442b" strokeWidth="1.5" className="radar-sweep" />
-        </svg>
+        <Radar className="h-[22px] w-[22px] text-white opacity-60" aria-hidden strokeWidth={1.5} />
       </div>
 
       <ul className="space-y-2.5 pt-3" aria-live="polite">
