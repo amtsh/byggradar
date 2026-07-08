@@ -1,58 +1,58 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "./LanguageProvider";
 
 export default function SignupForm() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
-  const [region, setRegion] = useState("Stockholm");
+  const [regionIndex, setRegionIndex] = useState(0);
   const [sent, setSent] = useState(false);
 
   function submit() {
     if (!email.includes("@")) return;
-    const subject = encodeURIComponent("Intresseanmälan Byggradar — 3 leads utan kostnad");
-    const body = encodeURIComponent(
-      `Företagets e-post: ${email}\nOmråde: ${region}\n\nJa, skicka 3 aktuella OVK-leads så vi kan bedöma kvaliteten.`
-    );
+    const subject = encodeURIComponent(t.cta.mailSubject);
+    const body = encodeURIComponent(t.cta.mailBody(email, t.cta.regions[regionIndex]));
     window.location.href = `mailto:hej@byggradar.se?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
   if (sent) {
     return (
-      <p className="rounded-lg bg-pass/10 px-4 py-3 text-sm font-medium text-pass ring-1 ring-pass/30">
-        Tack — vi hör av oss inom 24 timmar med era första leads.
+      <p className="rounded-2xl bg-pass/15 px-5 py-4 text-center text-sm font-medium text-white ring-1 ring-pass/40">
+        {t.cta.success}
       </p>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex flex-col gap-2.5 rounded-2xl bg-white/[0.06] p-2.5 ring-1 ring-white/10 sm:flex-row">
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
-        placeholder="er@foretagsmail.se"
-        aria-label="Företagets e-postadress"
-        className="min-w-0 flex-1 rounded-lg border border-line bg-panel px-4 py-3 text-sm outline-none focus:border-signal"
+        placeholder={t.cta.emailPlaceholder}
+        aria-label={t.cta.emailAria}
+        className="min-w-0 flex-1 rounded-xl bg-white px-4 py-3 text-sm text-ink outline-none ring-1 ring-transparent transition focus:ring-signal"
       />
       <select
-        value={region}
-        onChange={(e) => setRegion(e.target.value)}
-        aria-label="Välj område"
-        className="rounded-lg border border-line bg-panel px-3 py-3 text-sm outline-none focus:border-signal"
+        value={regionIndex}
+        onChange={(e) => setRegionIndex(Number(e.target.value))}
+        aria-label={t.cta.regionAria}
+        className="rounded-xl bg-white px-3 py-3 text-sm text-ink outline-none ring-1 ring-transparent transition focus:ring-signal"
       >
-        <option>Stockholm</option>
-        <option>Göteborg</option>
-        <option>Malmö</option>
-        <option>Uppsala</option>
-        <option>Annat område</option>
+        {t.cta.regions.map((r, i) => (
+          <option key={r} value={i}>
+            {r}
+          </option>
+        ))}
       </select>
       <button
         onClick={submit}
-        className="rounded-lg bg-signal px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110"
+        className="rounded-xl bg-signal px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-signal/25 transition hover:brightness-110"
       >
-        Få 3 leads gratis
+        {t.cta.button}
       </button>
     </div>
   );
