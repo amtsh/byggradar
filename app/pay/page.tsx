@@ -1,18 +1,20 @@
 "use client";
 
 import { Check, ShieldCheck, Zap, ArrowRight, Star } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { LanguageProvider, useLanguage } from "./LanguageProvider";
+import { useEffect, useRef, useState, type ElementType } from "react";
+import { LanguageProvider, useLanguage } from "../LanguageProvider";
+
+interface RevealProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
 
 function Reveal({
   children,
   className = "",
   delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -43,15 +45,20 @@ function Reveal({
   );
 }
 
+interface ValueProp {
+  title: string;
+  description: string;
+  icon: ElementType;
+}
+
 function PayPage() {
   const { t } = useLanguage();
 
   const handleCheckout = () => {
-    // Redirect to Polar.sh checkout
     window.location.href = "https://polar.sh/amtsh/subscriptions";
   };
 
-  const valueProps = [
+  const valueProps: ValueProp[] = [
     {
       title: "Högintensiva B2B-leads",
       description: "Vi levererar enbart leads på underkända OVK-besiktningar för juridiska personer (AB & BRF).",
@@ -71,7 +78,6 @@ function PayPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-paper min-h-screen">
-      {/* Simple Nav */}
       <header className="border-b border-line bg-paper/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <a href="/" className="font-display text-lg font-extrabold tracking-tight">
